@@ -66,7 +66,23 @@ internal fun musicQualityLabel(quality: MusicAudioQuality): Int =
         MusicAudioQuality.HIGH -> R.string.music_quality_high
         MusicAudioQuality.MEDIUM -> R.string.music_quality_medium
         MusicAudioQuality.LOW -> R.string.music_quality_low
+        MusicAudioQuality.DOLBY_ATMOS -> R.string.music_quality_dolby_atmos
+        MusicAudioQuality.OPUS_160 -> R.string.music_quality_opus_160
+        MusicAudioQuality.OPUS_96 -> R.string.music_quality_opus_96
+        MusicAudioQuality.OPUS_48 -> R.string.music_quality_opus_48
     }
+
+/** The line under a music choice, or none: Auto explains its network rule, Dolby Atmos its fallback. */
+@StringRes
+internal fun musicQualityDescription(quality: MusicAudioQuality): Int? =
+    when (quality) {
+        MusicAudioQuality.AUTO -> R.string.settings_music_quality_auto_summary
+        MusicAudioQuality.DOLBY_ATMOS -> R.string.music_quality_dolby_atmos_desc
+        else -> null
+    }
+
+/** Download choices: downloads are always AAC, so codec-specific streaming tiers are left out. */
+internal val MusicDownloadQualities = listOf(MusicAudioQuality.HIGH, MusicAudioQuality.MEDIUM, MusicAudioQuality.LOW)
 
 /** The fallback choices for [preferred]: every codec but the preferred one. */
 internal fun fallbackCodecs(preferred: VideoCodec): List<VideoCodec> = VideoCodec.entries.filter { it != preferred }

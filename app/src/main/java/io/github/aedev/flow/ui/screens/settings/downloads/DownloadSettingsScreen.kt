@@ -50,7 +50,6 @@ import io.github.aedev.flow.R
 import io.github.aedev.flow.data.local.AutoDownloadMode
 import io.github.aedev.flow.data.local.DownloadDialogStyle
 import io.github.aedev.flow.data.local.MAX_CONCURRENT_DOWNLOADS
-import io.github.aedev.flow.data.local.MusicAudioQuality
 import io.github.aedev.flow.data.local.VideoCodec
 import io.github.aedev.flow.data.repository.MediaCacheType
 import io.github.aedev.flow.data.video.downloader.work.RetagStatus
@@ -71,7 +70,7 @@ import io.github.aedev.flow.ui.components.shared.FlowChoiceDialog
 import io.github.aedev.flow.ui.components.shared.FlowToggleOption
 import io.github.aedev.flow.ui.screens.settings.index.DestinationIndex
 import io.github.aedev.flow.ui.screens.settings.index.DownloadsIndex
-import io.github.aedev.flow.ui.screens.settings.quality.MusicQualities
+import io.github.aedev.flow.ui.screens.settings.quality.MusicDownloadQualities
 import io.github.aedev.flow.ui.screens.settings.quality.VideoQualities
 import io.github.aedev.flow.ui.screens.settings.quality.codecLabel
 import io.github.aedev.flow.ui.screens.settings.quality.musicQualityLabel
@@ -318,7 +317,7 @@ internal fun DownloadSettingsScreen(
             FlowChoiceDialog(
                 title = stringResource(R.string.settings_music_download_quality),
                 options =
-                    MusicQualities.filter { it != MusicAudioQuality.AUTO }.map {
+                    MusicDownloadQualities.map {
                         FlowChoice(
                             it,
                             stringResource(musicQualityLabel(it)),

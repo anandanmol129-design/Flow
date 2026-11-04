@@ -4179,6 +4179,12 @@ enum class MusicAudioQuality(
     HIGH("High"),
     MEDIUM("Medium"),
     LOW("Low"),
+
+    /** Prefers a multichannel Dolby (E-AC-3 / AC-3) stream when the track has one, else the best stream. */
+    DOLBY_ATMOS("Dolby Atmos"),
+    OPUS_160("Opus 160"),
+    OPUS_96("Opus 96"),
+    OPUS_48("Opus 48"),
     ;
 
     /** The quality to actually stream: Auto picks High on Wi-Fi and Medium on mobile data, like video does. */

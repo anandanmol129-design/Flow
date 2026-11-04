@@ -2,6 +2,7 @@ package io.github.aedev.flow.data.video
 
 import io.github.aedev.flow.data.local.MusicAudioQuality
 import io.github.aedev.flow.innertube.models.response.PlayerResponse.StreamingData.Format
+import io.github.aedev.flow.player.stream.MusicQualityPicker
 import io.github.aedev.flow.player.stream.VideoCodecUtils
 import io.github.aedev.flow.player.stream.preferNonDrc
 import java.util.Locale
@@ -142,7 +143,12 @@ object DownloadStreamPolicy {
         return when (quality) {
             MusicAudioQuality.MEDIUM -> candidates.minByOrNull { abs(audioBitrate(it) - MEDIUM_BITRATE) }
             MusicAudioQuality.LOW -> candidates.minByOrNull(::audioBitrate)
-            MusicAudioQuality.HIGH, MusicAudioQuality.AUTO -> candidates.maxByOrNull(::audioBitrate)
+            // Downloads stay AAC, so the Opus tiers become the AAC stream nearest their bitrate.
+            MusicAudioQuality.OPUS_160, MusicAudioQuality.OPUS_96, MusicAudioQuality.OPUS_48 -> {
+                val target = MusicQualityPicker.targetBitrate(quality)!!
+                candidates.minByOrNull { abs(audioBitrate(it) - target) }
+            }
+            MusicAudioQuality.HIGH, MusicAudioQuality.AUTO, MusicAudioQuality.DOLBY_ATMOS -> candidates.maxByOrNull(::audioBitrate)
         }
     }
 

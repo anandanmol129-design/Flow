@@ -12,7 +12,7 @@ class MusicAudioQualityTest {
 
     @Test
     fun `a fixed choice ignores the network`() {
-        listOf(MusicAudioQuality.HIGH, MusicAudioQuality.MEDIUM, MusicAudioQuality.LOW).forEach { quality ->
+        MusicAudioQuality.entries.filter { it != MusicAudioQuality.AUTO }.forEach { quality ->
             assertEquals(quality, quality.resolve(onWifi = true))
             assertEquals(quality, quality.resolve(onWifi = false))
         }

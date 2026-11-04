@@ -1483,6 +1483,11 @@
     <string name="music_quality_high">High</string>
     <string name="music_quality_medium">Medium</string>
     <string name="music_quality_low">Low</string>
+    <string name="music_quality_dolby_atmos">Dolby Atmos</string>
+    <string name="music_quality_dolby_atmos_desc">Multichannel Dolby audio when the song has it, otherwise the best quality</string>
+    <string name="music_quality_opus_160">OPUS 160 kbps</string>
+    <string name="music_quality_opus_96">OPUS 96 kbps</string>
+    <string name="music_quality_opus_48">OPUS 48 kbps</string>
     <string name="quality_144p">144p</string>
     <string name="quality_240p">240p</string>
     <string name="quality_360p">360p</string>

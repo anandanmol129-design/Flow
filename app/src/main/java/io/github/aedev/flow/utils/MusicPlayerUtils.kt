@@ -12,6 +12,7 @@ import io.github.aedev.flow.player.error.StreamDenialClassifier
 import io.github.aedev.flow.player.stream.AudioStreamSelector
 import io.github.aedev.flow.player.stream.ClientGateTracker
 import io.github.aedev.flow.player.stream.InnerTubeVideoStreamExtractor
+import io.github.aedev.flow.player.stream.MusicQualityPicker
 import io.github.aedev.flow.player.stream.PlaybackBlockedException
 import io.github.aedev.flow.player.stream.VideoUnavailableException
 import io.github.aedev.flow.player.stream.preferNonDrc
@@ -23,7 +24,6 @@ import kotlinx.coroutines.withTimeoutOrNull
 import java.io.IOException
 import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.math.abs
 
 object MusicPlayerUtils {
     private const val TAG = "MusicPlayerUtils"
@@ -225,16 +225,14 @@ object MusicPlayerUtils {
     ): PlayerResponse.StreamingData.Format? {
         if (formats.isEmpty()) return null
 
-        val formatsWithKnownBitrate = formats.filter { it.audioBitrate() > 0 }.ifEmpty { formats }
-        return when (preferredMusicAudioQuality) {
-            MusicAudioQuality.AUTO,
-            MusicAudioQuality.HIGH,
-            -> formatsWithKnownBitrate.maxByOrNull { it.audioQualityScore() }
-
-            MusicAudioQuality.MEDIUM -> formatsWithKnownBitrate.minByOrNull { abs(it.audioBitrate() - MEDIUM_BITRATE_TARGET) }
-
-            MusicAudioQuality.LOW -> formatsWithKnownBitrate.minByOrNull { it.audioBitrate() }
-        }
+        return MusicQualityPicker.pick(
+            items = formats,
+            quality = preferredMusicAudioQuality,
+            bitrate = { it.audioBitrate() },
+            codec = { it.mimeType },
+            channels = { it.audioChannels ?: 2 },
+            highScore = { it.audioQualityScore() },
+        )
     }
 
     private fun PlayerResponse.StreamingData.Format.audioQualityScore(): Int = audioBitrate() + if (mimeType.contains("webm")) 10_240 else 0
@@ -264,8 +262,6 @@ object MusicPlayerUtils {
 
         return formats
     }
-
-    private const val MEDIUM_BITRATE_TARGET = 128_000
 }
 
 /** The music resolve outlived its budget; the player is told so rather than left buffering. */

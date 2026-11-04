@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.aedev.flow.R
-import io.github.aedev.flow.data.local.MusicAudioQuality
 import io.github.aedev.flow.data.local.ThumbnailQuality
 import io.github.aedev.flow.data.local.VideoCodec
 import io.github.aedev.flow.data.local.VideoQuality
@@ -80,7 +79,7 @@ internal fun QualitySettingsScreen(
     val thumbnailsWifiLabel = stringResource(thumbnailQualityLabel(thumbnailsWifi))
     val thumbnailsMobileLabel = stringResource(thumbnailQualityLabel(thumbnailsMobile))
     val musicLabels = MusicQualities.associateWith { stringResource(musicQualityLabel(it)) }
-    val musicAutoSummary = stringResource(R.string.settings_music_quality_auto_summary)
+    val musicDescriptions = MusicQualities.associateWith { quality -> musicQualityDescription(quality)?.let { stringResource(it) } }
 
     SettingsPage(
         title = stringResource(R.string.quality),
@@ -116,7 +115,7 @@ internal fun QualitySettingsScreen(
                         option(
                             key = "quality.music.${quality.name}",
                             label = musicLabels.getValue(quality),
-                            supportingText = musicAutoSummary.takeIf { quality == MusicAudioQuality.AUTO },
+                            supportingText = musicDescriptions[quality],
                             selected = music == quality,
                             onClick = { viewModel.setMusic(quality) },
                         )

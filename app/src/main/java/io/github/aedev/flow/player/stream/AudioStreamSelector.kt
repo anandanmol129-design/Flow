@@ -4,7 +4,6 @@ import io.github.aedev.flow.data.local.MusicAudioQuality
 import org.schabi.newpipe.extractor.stream.AudioStream
 import org.schabi.newpipe.extractor.stream.AudioTrackType
 import java.util.Locale
-import kotlin.math.abs
 
 object AudioStreamSelector {
     fun selectPreferredAudioStream(
@@ -31,16 +30,12 @@ object AudioStreamSelector {
     ): AudioStream? {
         if (streams.isEmpty()) return null
 
-        val streamsWithKnownBitrate = streams.filter { it.audioBitrate() > 0 }.ifEmpty { streams }
-        return when (preferredMusicAudioQuality) {
-            MusicAudioQuality.AUTO,
-            MusicAudioQuality.HIGH,
-            -> streamsWithKnownBitrate.maxByOrNull { it.audioBitrate() }
-
-            MusicAudioQuality.MEDIUM -> streamsWithKnownBitrate.minByOrNull { abs(it.audioBitrate() - MEDIUM_BITRATE_TARGET) }
-
-            MusicAudioQuality.LOW -> streamsWithKnownBitrate.minByOrNull { it.audioBitrate() }
-        }
+        return MusicQualityPicker.pick(
+            items = streams,
+            quality = preferredMusicAudioQuality,
+            bitrate = { it.audioBitrate() },
+            codec = { it.codec?.takeIf(String::isNotBlank) ?: it.format?.mimeType },
+        )
     }
 
     private fun AudioStream.audioBitrate(): Int = averageBitrate.takeIf { it > 0 } ?: bitrate
@@ -88,6 +83,4 @@ object AudioStreamSelector {
         return languageTag.equals(preference, ignoreCase = true) ||
             languageTag.startsWith("$preference-", ignoreCase = true)
     }
-
-    private const val MEDIUM_BITRATE_TARGET = 128_000
 }
