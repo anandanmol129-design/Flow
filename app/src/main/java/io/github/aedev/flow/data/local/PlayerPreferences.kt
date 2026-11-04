@@ -4180,6 +4180,10 @@ enum class MusicAudioQuality(
     MEDIUM("Medium"),
     LOW("Low"),
 
+    /** Lossless FLAC when the song has a FLAC stream (24-bit takes the largest), else the best stream. */
+    FLAC_24("FLAC 24"),
+    FLAC_16("FLAC 16"),
+
     /** Prefers a multichannel Dolby (E-AC-3 / AC-3) stream when the track has one, else the best stream. */
     DOLBY_ATMOS("Dolby Atmos"),
     OPUS_160("Opus 160"),

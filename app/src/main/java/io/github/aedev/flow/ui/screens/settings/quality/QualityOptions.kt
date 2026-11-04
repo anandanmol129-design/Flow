@@ -66,17 +66,20 @@ internal fun musicQualityLabel(quality: MusicAudioQuality): Int =
         MusicAudioQuality.HIGH -> R.string.music_quality_high
         MusicAudioQuality.MEDIUM -> R.string.music_quality_medium
         MusicAudioQuality.LOW -> R.string.music_quality_low
+        MusicAudioQuality.FLAC_24 -> R.string.music_quality_flac_24
+        MusicAudioQuality.FLAC_16 -> R.string.music_quality_flac_16
         MusicAudioQuality.DOLBY_ATMOS -> R.string.music_quality_dolby_atmos
         MusicAudioQuality.OPUS_160 -> R.string.music_quality_opus_160
         MusicAudioQuality.OPUS_96 -> R.string.music_quality_opus_96
         MusicAudioQuality.OPUS_48 -> R.string.music_quality_opus_48
     }
 
-/** The line under a music choice, or none: Auto explains its network rule, Dolby Atmos its fallback. */
+/** The line under a music choice, or none: Auto explains its network rule, FLAC and Dolby Atmos their fallback. */
 @StringRes
 internal fun musicQualityDescription(quality: MusicAudioQuality): Int? =
     when (quality) {
         MusicAudioQuality.AUTO -> R.string.settings_music_quality_auto_summary
+        MusicAudioQuality.FLAC_24, MusicAudioQuality.FLAC_16 -> R.string.music_quality_flac_desc
         MusicAudioQuality.DOLBY_ATMOS -> R.string.music_quality_dolby_atmos_desc
         else -> null
     }

@@ -13,6 +13,9 @@ import kotlin.math.abs
  *   160, 70 and 50 kbps); without Opus, the nearest stream of any codec.
  * - Dolby Atmos: the best multichannel Dolby (E-AC-3 / AC-3) stream when the track has one,
  *   otherwise the best stream, so the choice never fails a song that has no Dolby mix.
+ * - Lossless FLAC 24 / 16 bit: a FLAC stream when the track has one (24-bit the largest, 16-bit the
+ *   smallest), otherwise the best stream. YouTube does not normally serve FLAC, so this is usually
+ *   the same as High.
  */
 object MusicQualityPicker {
     const val MEDIUM_BITRATE_TARGET = 128_000
@@ -26,6 +29,8 @@ object MusicQualityPicker {
         }
 
     fun isOpus(mimeOrCodec: String?): Boolean = mimeOrCodec?.contains("opus", ignoreCase = true) == true
+
+    fun isFlac(mimeOrCodec: String?): Boolean = mimeOrCodec?.contains("flac", ignoreCase = true) == true
 
     fun isDolby(mimeOrCodec: String?): Boolean {
         val value = mimeOrCodec?.lowercase() ?: return false
@@ -51,6 +56,10 @@ object MusicQualityPicker {
             MusicAudioQuality.MEDIUM -> known.minByOrNull { abs(bitrate(it) - MEDIUM_BITRATE_TARGET) }
 
             MusicAudioQuality.LOW -> known.minByOrNull(bitrate)
+
+            MusicAudioQuality.FLAC_24 -> known.filter { isFlac(codec(it)) }.maxByOrNull(bitrate) ?: known.maxByOrNull(highScore)
+
+            MusicAudioQuality.FLAC_16 -> known.filter { isFlac(codec(it)) }.minByOrNull(bitrate) ?: known.maxByOrNull(highScore)
 
             MusicAudioQuality.DOLBY_ATMOS -> {
                 val dolby = known.filter { isDolby(codec(it)) || channels(it) > 2 }

@@ -41,6 +41,16 @@ class MusicQualityPickerTest {
     }
 
     @Test
+    fun `flac tiers prefer flac and fall back to the best`() {
+        val flacHi = S(901, 2300, "audio/flac")
+        val flacLo = S(902, 1400, "audio/flac")
+        assertEquals(901, pick(listOf(opus160, flacHi, flacLo), MusicAudioQuality.FLAC_24))
+        assertEquals(902, pick(listOf(opus160, flacHi, flacLo), MusicAudioQuality.FLAC_16))
+        assertEquals(251, pick(listOf(opus160, aac128), MusicAudioQuality.FLAC_24))
+        assertEquals(251, pick(listOf(opus160, aac128), MusicAudioQuality.FLAC_16))
+    }
+
+    @Test
     fun `existing tiers keep their behaviour`() {
         val streams = listOf(opus160, opus50, aac128)
         assertEquals(251, pick(streams, MusicAudioQuality.HIGH))

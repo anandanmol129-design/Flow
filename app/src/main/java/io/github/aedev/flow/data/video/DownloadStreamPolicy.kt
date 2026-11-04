@@ -148,7 +148,12 @@ object DownloadStreamPolicy {
                 val target = MusicQualityPicker.targetBitrate(quality)!!
                 candidates.minByOrNull { abs(audioBitrate(it) - target) }
             }
-            MusicAudioQuality.HIGH, MusicAudioQuality.AUTO, MusicAudioQuality.DOLBY_ATMOS -> candidates.maxByOrNull(::audioBitrate)
+            MusicAudioQuality.HIGH,
+            MusicAudioQuality.AUTO,
+            MusicAudioQuality.DOLBY_ATMOS,
+            MusicAudioQuality.FLAC_24,
+            MusicAudioQuality.FLAC_16,
+            -> candidates.maxByOrNull(::audioBitrate)
         }
     }
 
